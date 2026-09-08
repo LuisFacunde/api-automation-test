@@ -1,0 +1,13 @@
+{
+  "name": "sut-didatico-cidade-conectada",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SUT didatico minimo complementar — recurso pedagogico da ADS033",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "UNLICENSED"
+}

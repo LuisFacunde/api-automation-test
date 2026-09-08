@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="pt-BR">
+   <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Cidade Conectada — SUT didatico</title>
+      <style>
+         :root {
+            color-scheme: light;
+         }
+         body {
+            font-family: system-ui, sans-serif;
+            margin: 0;
+            background: #f5f1ec;
+            color: #2c2a28;
+         }
+         main {
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 24px 20px 64px;
+         }
+         h1 {
+            font-size: 22px;
+            margin: 0 0 4px;
+         }
+         p.sub {
+            margin: 0 0 24px;
+            color: #6b635c;
+            font-size: 14px;
+         }
+         section {
+            background: #fff;
+            border: 1px solid #e2dad2;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+         }
+         h2 {
+            font-size: 16px;
+            margin: 0 0 14px;
+         }
+         label {
+            display: block;
+            font-size: 13px;
+            margin: 12px 0 4px;
+            font-weight: 600;
+         }
+         input,
+         select,
+         textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            font-size: 15px;
+            border: 1px solid #cfc5bd;
+            border-radius: 8px;
+            background: #fff;
+            font-family: inherit;
+         }
+         button {
+            margin-top: 16px;
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            border: 0;
+            border-radius: 8px;
+            background: #c2410c;
+            color: #fff;
+            cursor: pointer;
+         }
+         button.secundario {
+            background: #2c2a28;
+         }
+         .msg {
+            margin-top: 14px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+         }
+         .msg.ok {
+            background: #e7f3ea;
+            color: #14532d;
+            display: block;
+         }
+         .msg.erro {
+            background: #fbe9e7;
+            color: #7f1d1d;
+            display: block;
+         }
+         ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+         }
+         li {
+            border-bottom: 1px solid #efe9e3;
+            padding: 10px 0;
+            font-size: 14px;
+         }
+         li:last-child {
+            border-bottom: 0;
+         }
+         .hidden {
+            display: none;
+         }
+         .prot {
+            font-weight: 700;
+         }
+      </style>
+   </head>
+   <body>
+      <main>
+         <h1>Cidade Conectada</h1>
+         <p class="sub">
+            SUT didatico — recurso pedagogico da disciplina ADS033.
+         </p>
+
+         <section id="secao-login">
+            <h2>Entrar</h2>
+            <label for="campo-email">E-mail</label>
+            <input
+               id="campo-email"
+               data-testid="campo-email"
+               type="email"
+               autocomplete="off"
+               placeholder="ana@exemplo.com"
+            />
+            <label for="campo-senha">Senha</label>
+            <input
+               id="campo-senha"
+               data-testid="campo-senha"
+               type="password"
+               autocomplete="off"
+               placeholder="senha123"
+            />
+            <button id="botao-entrar" data-testid="botao-entrar">Entrar</button>
+            <div id="msg-login" class="msg"></div>
+         </section>
+
+         <section id="secao-nova-demanda" class="hidden">
+            <h2>Nova demanda</h2>
+            <label for="select-categoria">Categoria</label>
+            <select id="select-categoria" data-testid="select-categoria">
+               <option value="ROAD_MAINTENANCE">Buraco em via publica</option>
+               <option value="PUBLIC_LIGHTING">Iluminacao publica</option>
+               <option value="WASTE_DISPOSAL">Descarte irregular</option>
+               <option value="SANITATION">Saneamento</option>
+               <option value="INSPECTION">Fiscalizacao</option>
+            </select>
+            <label for="campo-descricao"
+               >Descricao (20 a 1000 caracteres)</label
+            >
+            <textarea
+               id="campo-descricao"
+               data-testid="campo-descricao"
+               rows="3"
+            ></textarea>
+            <label for="select-regiao">Regiao</label>
+            <select id="select-regiao" data-testid="select-regiao">
+               <option>RPA_1</option>
+               <option>RPA_2</option>
+               <option selected>RPA_3</option>
+               <option>RPA_4</option>
+               <option>RPA_5</option>
+               <option>RPA_6</option>
+            </select>
+            <button id="botao-enviar" data-testid="botao-enviar">
+               Enviar demanda
+            </button>
+            <div id="msg-demanda" class="msg"></div>
+            <div
+               id="texto-protocolo"
+               data-testid="texto-protocolo"
+               class="hidden"
+            ></div>
+         </section>
+
+         <section id="secao-minhas-demandas" class="hidden">
+            <h2>Minhas demandas</h2>
+            <button
+               id="botao-atualizar"
+               class="secundario"
+               data-testid="botao-atualizar"
+            >
+               Atualizar lista
+            </button>
+            <ul id="lista-demandas" data-testid="lista-demandas"></ul>
+         </section>
+      </main>
+
+      <script>
+         const API = "/api/v1";
+         let token = null;
+
+         const $ = (id) => document.getElementById(id);
+         const mostrar = (el, texto, ok) => {
+            el.textContent = texto;
+            el.className = "msg " + (ok ? "ok" : "erro");
+         };
+
+         $("botao-entrar").addEventListener("click", async () => {
+            const r = await fetch(API + "/auth/login", {
+               method: "POST",
+               headers: { "content-type": "application/json" },
+               body: JSON.stringify({
+                  email: $("campo-email").value,
+                  password: $("campo-senha").value,
+               }),
+            });
+            const body = await r.json();
+            if (!r.ok)
+               return mostrar($("msg-login"), body.error.message, false);
+            token = body.accessToken;
+            mostrar($("msg-login"), "Autenticado como " + body.user.name, true);
+            $("secao-nova-demanda").classList.remove("hidden");
+            $("secao-minhas-demandas").classList.remove("hidden");
+            carregar();
+         });
+
+         $("botao-enviar").addEventListener("click", async () => {
+            const r = await fetch(API + "/demands", {
+               method: "POST",
+               headers: {
+                  "content-type": "application/json",
+                  authorization: "Bearer " + token,
+               },
+               body: JSON.stringify({
+                  category: $("select-categoria").value,
+                  description: $("campo-descricao").value,
+                  location: {
+                     latitude: -8.0578,
+                     longitude: -34.8829,
+                     region: $("select-regiao").value,
+                  },
+               }),
+            });
+            const body = await r.json();
+            if (!r.ok) {
+               $("texto-protocolo").classList.add("hidden");
+               return mostrar($("msg-demanda"), body.error.message, false);
+            }
+            mostrar($("msg-demanda"), "Demanda registrada.", true);
+            const p = $("texto-protocolo");
+            p.textContent = "Protocolo " + body.protocol;
+            p.classList.remove("hidden");
+            carregar();
+         });
+
+         $("botao-atualizar").addEventListener("click", carregar);
+
+         async function carregar() {
+            const r = await fetch(API + "/demands", {
+               headers: { authorization: "Bearer " + token },
+            });
+            const body = await r.json();
+            $("lista-demandas").innerHTML = body.data
+               .map(
+                  (d) =>
+                     '<li><span class="prot">' +
+                     d.protocol +
+                     "</span> — " +
+                     d.category +
+                     " — " +
+                     d.status +
+                     "</li>",
+               )
+               .join("");
+         }
+      </script>
+   </body>
+</html>

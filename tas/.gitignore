@@ -16,3 +16,5 @@ e2e/maestro/**/screenshots/
 .DS_Store
 .vscode/
 .idea/
+
+sut/
