@@ -4,22 +4,22 @@ appId: com.android.chrome
 - openLink: "http://localhost:3000/web"
 
 - tapOn:
-    id: "campo-email"
+     id: "campo-email"
 - inputText: "ana@exemplo.com"
 - tapOn:
-    id: "campo-senha"
+     id: "campo-senha"
 - inputText: "senha123"
 - tapOn:
-    id: "botao-entrar"
+     id: "botao-entrar"
 - assertVisible: "Autenticado como Ana Cidada"
 
 - tapOn:
-    id: "campo-descricao"
+     id: "campo-descricao"
 - inputText: "Buraco de grande porte na pista da direita."
 - tapOn:
-    id: "botao-enviar"
+     id: "botao-enviar"
 
 - extendedWaitUntil:
-    visible: "Demanda registrada."
-    timeout: 10000
+     visible: "Demanda registrada."
+     timeout: 10000
 - assertVisible: ".*DEM-\\d{4}-\\d{6}.*"

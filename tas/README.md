@@ -154,7 +154,7 @@ Para evitar a erosão da arquitetura ao longo do semestre:
 2. **Isolamento de Unidade**:
    - Testes em `tests/unidade/` validam lógica pura em memória. **Não realizam chamadas de rede** e não dependem de servidores ativos.
 3. **Fronteira com o SUT**:
-   - Toda comunicação entre os testes de serviço (`tests/api/`) e o SUT ocorre através de conexões de rede (HTTP via `lib/` contra `API_BASE_URL`), nunca importando o código de produção ou o `server.js` diretamente para dentro do teste.
+   - Toda comunicação entre os testes de serviço (`tests/api/`) e o SUT ocorre através de conexões de rede (HTTP via `lib/` contra `BASE_URL`), nunca importando o código de produção ou o `server.js` diretamente para dentro do teste.
 
 ---
 
@@ -165,9 +165,9 @@ Para evitar a erosão da arquitetura ao longo do semestre:
 - **Arquivos de teste**: Devem terminar obrigatoriamente com o sufixo `.test.js` (ex.: `demandas.test.js`).
 - **Arquivos auxiliares**: Usar `kebab-case.js` (ex.: `demand-factory.js`, `api-client.js`).
 - **Blocos de teste**:
-  - Usar `describe('NomeDoModuloOuRecurso', ...)` para agrupar contextos.
-  - Usar `test('deve ... quando ...')` ou `it('deve ... quando ...')` com frases em português claro no indicativo, especificando a condição esperada.
-  - Estrutura interna recomendada: padrão **AAA** (_Arrange, Act, Assert_).
+   - Usar `describe('NomeDoModuloOuRecurso', ...)` para agrupar contextos.
+   - Usar `test('deve ... quando ...')` ou `it('deve ... quando ...')` com frases em português claro no indicativo, especificando a condição esperada.
+   - Estrutura interna recomendada: padrão **AAA** (_Arrange, Act, Assert_).
 
 ### Onde ficam as asserções?
 
@@ -178,8 +178,8 @@ Para evitar a erosão da arquitetura ao longo do semestre:
 ### Onde ficam os dados (massa de teste)?
 
 - **Centralizados na pasta `data/`**:
-  - Evite dados _hardcoded_ espalhados em múltiplos arquivos de teste.
-  - Implemente _factories_ com valores padrão válidos que permitam sobrescrever propriedades específicas para cada cenário de teste.
+   - Evite dados _hardcoded_ espalhados em múltiplos arquivos de teste.
+   - Implemente _factories_ com valores padrão válidos que permitam sobrescrever propriedades específicas para cada cenário de teste.
 
 ### Snippet / Prompt para Solicitação de Código à IA
 
@@ -189,12 +189,12 @@ Copie e cole este bloco de contexto quando solicitar auxílio de Inteligência A
 Você é um especialista em automação de testes em Node.js. Escreva o código seguindo as convenções da nossa TAS:
 
 - Arquitetura:
-  - lib/ para adaptação ao SUT (chamadas HTTP/fetch nativo).
-  - api/ para negócio da automação (fluxos e operações do domínio).
-  - data/ para massa de dados e factories com suporte a overrides.
-  - tests/unidade/ para testes de componente isolados sem chamadas de rede.
-  - tests/api/ para testes de serviço e contrato HTTP.
-  - e2e/maestro/ para fluxos de interface mobile.
+   - lib/ para adaptação ao SUT (chamadas HTTP/fetch nativo).
+   - api/ para negócio da automação (fluxos e operações do domínio).
+   - data/ para massa de dados e factories com suporte a overrides.
+   - tests/unidade/ para testes de componente isolados sem chamadas de rede.
+   - tests/api/ para testes de serviço e contrato HTTP.
+   - e2e/maestro/ para fluxos de interface mobile.
 - Ambiente: Node.js (>=20.11.0) utilizando runner nativo `node:test` e asserções estritas com `node:assert/strict`.
 - Sem dependências externas de teste (sem Jest, Mocha, Chai ou Supertest).
 - Padrão estrutural: AAA (Arrange, Act, Assert).
@@ -210,15 +210,15 @@ A configuração do ambiente de testes é parametrizada via variáveis de ambien
 
 ### Variáveis de Ambiente
 
-| Variável           | Descrição / O que controla                                      | Valor Padrão / Exemplo Didático |
-| ------------------ | --------------------------------------------------------------- | ------------------------------- |
-| `NODE_ENV`         | Define o ambiente de execução                                   | `test`                          |
-| `API_BASE_URL`     | URL base do SUT contra o qual os testes de API serão disparados | `http://localhost:3000/api/v1`  |
-| `SUT_PORT`         | Porta utilizada pelo servidor SUT didático local                | `3000`                          |
-| `CITIZEN_EMAIL`    | E-mail de teste com perfil Cidadão semeado no SUT               | `ana@exemplo.com`               |
-| `CITIZEN_PASSWORD` | Senha de teste para o perfil Cidadão                            | `senha123`                      |
-| `MANAGER_EMAIL`    | E-mail de teste com perfil Gestor semeado no SUT                | `gestor@exemplo.com`            |
-| `MANAGER_PASSWORD` | Senha de teste para o perfil Gestor                             | `senha123`                      |
+| Variável           | Descrição / O que controla                                    | Valor Padrão / Exemplo Didático |
+| ------------------ | ------------------------------------------------------------- | ------------------------------- |
+| `NODE_ENV`         | Define o ambiente de execução                                 | `test`                          |
+| `BASE_URL`         | Origem do SUT contra o qual os testes de API serão disparados | `http://localhost:3000`         |
+| `SUT_PORT`         | Porta utilizada pelo servidor SUT didático local              | `3000`                          |
+| `CITIZEN_EMAIL`    | E-mail de teste com perfil Cidadão semeado no SUT             | `ana@exemplo.com`               |
+| `CITIZEN_PASSWORD` | Senha de teste para o perfil Cidadão                          | `senha123`                      |
+| `MANAGER_EMAIL`    | E-mail de teste com perfil Gestor semeado no SUT              | `gestor@exemplo.com`            |
+| `MANAGER_PASSWORD` | Senha de teste para o perfil Gestor                           | `senha123`                      |
 
 ### Arquivo `.env.example`
 
@@ -237,11 +237,20 @@ cp .env.example .env
 
 ### Integrantes da Squad
 
-| Nome Completo       | RA       | Função Principal na Squad                | GitHub / Contato |
-| ------------------- | -------- | ---------------------------------------- | ---------------- |
-| _[Nome do Aluno 1]_ | _[RA 1]_ | Automação de Testes de API               | _[@usuario1]_    |
-| _[Nome do Aluno 2]_ | _[RA 2]_ | Automação de Testes Unitários e Fixtures | _[@usuario2]_    |
-| _[Nome do Aluno 3]_ | _[RA 3]_ | Testes E2E e Integração Contínua         | _[@usuario3]_    |
+| Nome                | E-mail             |
+| ------------------- | ------------------ |
+| André Felipe        | afsb@cesar.school  |
+| Dayvid Cristiano    | dcvs2@cesar.school |
+| Deyvison Conrado    | dmc2@cesar.school  |
+| Jennifer Cristine   | jclc2@cesar.school |
+| Letícia Gabriella   | lgcs@cesar.school  |
+| Levi Moraes         | lmma@cesar.school  |
+| Luis Henrique       | lhfs@cesar.school  |
+| Manuele Macêdo      | mmps2@cesar.school |
+| Maria Aparecida     | maers@cesar.school |
+| Peterson Jesus      | pjfm@cesar.school  |
+| Rhaldney Robert     | rrcd@cesar.school  |
+| Victor César Matias | vcms@cesar.school  |
 
 ### Rastreabilidade e Transparência no Uso de IA
 
