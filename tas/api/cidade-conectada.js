@@ -14,10 +14,16 @@ async function login(email, senha = SENHA_PADRAO) {
   return body.accessToken;
 }
 
+const fazerLogin = (dados) =>
+  http.post("/api/v1/auth/login", dados);
+
 const criarDemanda = (token, demanda) =>
   http.post("/api/v1/demands", demanda, { token });
 
 const mudarStatus = (token, id, status, note = null) =>
   http.patch(`/api/v1/demands/${id}/status`, { status, note }, { token });
 
-module.exports = { login, criarDemanda, mudarStatus };
+const resetarSUT = () =>
+  http.post("/api/v1/_test/reset");
+
+module.exports = { login, fazerLogin, criarDemanda, mudarStatus, resetarSUT };
