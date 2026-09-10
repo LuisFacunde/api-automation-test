@@ -1,0 +1,21 @@
+url: http://localhost:3000/web
+tags:
+  - smoke
+  - demanda
+---
+- launchApp
+- runFlow:
+    file: ../subflows/login.yaml
+    env:
+      EMAIL: ana@exemplo.com
+      SENHA: senha123
+- scrollUntilVisible:
+    element:
+      id: "campo-descricao"
+- tapOn:
+    id: "campo-descricao"
+- inputText: "Buraco grande na pista sentido bairro Macaxeira, proximo ao número 450."
+- tapOn:
+    id: "botao-enviar"
+- assertVisible: "Demanda registrada."
+- assertVisible: "Protocolo DEM-.*"

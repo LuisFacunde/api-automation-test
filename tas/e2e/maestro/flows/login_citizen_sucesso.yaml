@@ -1,0 +1,13 @@
+url: http://localhost:3000/web
+name: Login com sucesso
+tags:
+   - smoke
+   - login
+---
+- launchApp
+- runFlow:
+    file: ../subflows/login.yaml
+- assertVisible: "Autenticado como Ana Cidada"
+- scrollUntilVisible:
+    element:
+      id: "campo-descricao"

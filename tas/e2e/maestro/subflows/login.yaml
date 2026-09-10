@@ -1,0 +1,10 @@
+url: http://localhost:3000/web
+---
+- tapOn:
+    id: "campo-email"
+- inputText: ${EMAIL}
+- tapOn:
+    id: "campo-senha"
+- inputText: ${SENHA}
+- tapOn:
+    id: "botao-entrar"
