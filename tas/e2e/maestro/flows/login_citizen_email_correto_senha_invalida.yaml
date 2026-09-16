@@ -1,0 +1,15 @@
+url: http://localhost:3000/web
+name: Login com e-mail correto e senha incorreta
+tags:
+  - smoke
+  - login
+  - negativo
+---
+- launchApp
+- runFlow:
+    file: ../subflows/login.yaml
+    env:
+      EMAIL: ana@exemplo.com
+      SENHA: senha124
+- assertVisible: "E-mail ou senha incorretos"
+- assertNotVisible: "Autenticado como"
