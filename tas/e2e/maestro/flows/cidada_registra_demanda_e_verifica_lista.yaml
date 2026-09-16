@@ -1,0 +1,30 @@
+url: http://localhost:3000/web
+name: Cidada registra demanda e verifica na lista
+tags:
+  - demanda
+  - jornada-completa
+---
+- launchApp
+- runFlow:
+    file: ../subflows/login.yaml
+    env:
+      EMAIL: ana@exemplo.com
+      SENHA: senha123
+- assertVisible: "Autenticado como Ana Cidada"
+- scrollUntilVisible:
+    element:
+      id: "campo-descricao"
+- tapOn:
+    id: "campo-descricao"
+- inputText: "Buraco profundo na Av. Caxanga proximo ao numero 200, sentido Centro."
+- tapOn:
+    id: "botao-enviar"
+- assertVisible: "Demanda registrada."
+- assertVisible: "Protocolo DEM-.*"
+- scrollUntilVisible:
+    element:
+      id: "lista-demandas"
+- tapOn:
+    id: "botao-atualizar"
+- assertVisible: ".*RECEIVED.*"
+- assertVisible: ".*ROAD_MAINTENANCE.*"
